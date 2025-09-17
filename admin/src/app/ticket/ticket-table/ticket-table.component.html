@@ -1,0 +1,57 @@
+<div class="container">
+  <div
+    class="controls"
+    fxLayout="row"
+    fxLayoutGap="16px"
+    fxLayoutAlign="center"
+  >
+    <mat-form-field appearance="fill">
+      <mat-label>Status</mat-label>
+      <mat-select [(value)]="selectedStatus" (selectionChange)="applyFilter()">
+        <mat-option *ngFor="let s of status" [value]="s">{{ s }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Priority</mat-label>
+      <mat-select
+        [(value)]="selectedPriority"
+        (selectionChange)="applyFilter()"
+      >
+        <mat-option *ngFor="let p of priorities" [value]="p">{{
+          p
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div>
+      <button mat-raised-button color="primary" (click)="resetFilters()">
+        Reset
+      </button>
+    </div>
+  </div>
+
+  <mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="title">
+      <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.title }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.status }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="priority">
+      <mat-header-cell *matHeaderCellDef> Priority </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.priority }}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      [routerLink]="['/tickets', row.id]"
+      style="cursor: pointer"
+    ></mat-row>
+  </mat-table>
+</div>

@@ -1,0 +1,91 @@
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TicketService } from '../ticket.service';
+import {
+  TicketHistoryResponse,
+  TicketPriority,
+  TicketStatus,
+} from '../ticket.types';
+
+@Component({
+  selector: 'app-ticket-history',
+  templateUrl: './ticket-history.component.html',
+  styleUrls: ['./ticket-history.component.scss'],
+})
+export class TicketHistoryComponent implements OnInit {
+  ticket?: TicketHistoryResponse;
+  loading = true;
+
+  form: FormGroup;
+  submitting = false;
+  status: TicketStatus[] = ['open', 'in_progress', 'closed'];
+  priority: TicketPriority[] = ['low', 'medium', 'high', 'urgent'];
+
+  constructor(
+    private route: ActivatedRoute,
+    private ticketService: TicketService,
+    private fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      status: [null, Validators.required],
+      priority: [null, Validators.required],
+      message: ['', Validators.required],
+    });
+  }
+
+  ngOnInit(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+
+    this.ticketService.getTicketById(id).subscribe((ticket) => {
+      this.ticket = ticket;
+      this.loading = false;
+
+      this.form.patchValue({
+        status: ticket?.status || null,
+        priority: ticket?.priority || null,
+      });
+    });
+  }
+
+  submit() {
+    if (!this.ticket) {
+      return;
+    }
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.submitting = true;
+    const payload = {
+      status: this.form.value.status,
+      priority: this.form.value.priority,
+      message: this.form.value.message,
+    };
+
+    this.ticketService.updateTicket(this.ticket.id, payload).subscribe({
+      next: (updated) => {
+        this.submitting = false;
+
+        if (this.ticket) {
+          this.ticket.history = [
+            ...this.ticket.history,
+            {
+              id: updated.id,
+              email: updated.email,
+              message: updated.message,
+              createdAt: updated.createdAt,
+            },
+          ];
+        }
+
+        this.form.get('message')?.reset('');
+        this.form.get('message')?.setErrors(null);
+      },
+      error: (err) => {
+        this.submitting = false;
+      },
+    });
+  }
+}

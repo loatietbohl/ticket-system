@@ -1,0 +1,65 @@
+<div
+  *ngIf="loading"
+  style="display: flex; justify-content: center; margin-top: 40px"
+>
+  <mat-progress-spinner
+    mode="indeterminate"
+    diameter="50"
+  ></mat-progress-spinner>
+</div>
+
+<div class="history-container" *ngIf="!loading && ticket">
+  <button mat-icon-button [routerLink]="['/tickets']">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <mat-card class="ticket-card">
+    <mat-card-title>{{ ticket.title }}</mat-card-title>
+  </mat-card>
+
+  <div class="history">
+    <div *ngFor="let m of ticket.history" class="history-item">
+      <div class="bubble">
+        {{ m.message }}
+      </div>
+
+      <div class="metadata">
+        <span class="date">{{ m.createdAt }}</span>
+        <span class="email">{{ m.email }}</span>
+      </div>
+    </div>
+  </div>
+
+  <form
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+    style="display: flex; align-items: center; gap: 12px; margin-top: 20px"
+  >
+    <mat-form-field appearance="fill" style="flex: 1">
+      <mat-label>Message</mat-label>
+      <input matInput formControlName="message" placeholder="Write a message" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option *ngFor="let s of status" [value]="s">{{ s }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="width: 140px">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="priority">
+        <mat-option *ngFor="let p of priority" [value]="p">{{ p }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="submitting"
+    >
+      Send
+    </button>
+  </form>
+</div>
