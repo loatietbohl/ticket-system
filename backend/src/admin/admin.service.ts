@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Ticket, TicketHistory } from '../ticket/entities';
 import { TicketService } from '../ticket/ticket.service';
 import { UpdateTicketAdminDto, FilterTicketAdminDto } from './dto';
+import { EventsGateway } from 'src/events/events.gateway';
 
 @Injectable()
 export class AdminService {
@@ -13,6 +14,7 @@ export class AdminService {
     private ticketRepository: Repository<Ticket>,
     @InjectRepository(TicketHistory)
     private ticketHistoryRepository: Repository<TicketHistory>,
+    private readonly eventsGateway: EventsGateway,
   ) {}
 
   async updateTicket(
@@ -23,6 +25,7 @@ export class AdminService {
     if (!(await this.ticketService.findOne(ticketId))) {
       throw new NotFoundException();
     }
+
     await this.ticketRepository.save({
       id: ticketId,
       status: updateTicketAdminDto.status,
@@ -33,7 +36,12 @@ export class AdminService {
       email: userEmail,
       ticket: { id: ticketId },
     });
-    return await this.ticketHistoryRepository.save(ticketHistory);
+    const savedTicketHistory =
+      await this.ticketHistoryRepository.save(ticketHistory);
+
+    this.eventsGateway.emitTicketMessage(savedTicketHistory);
+
+    return savedTicketHistory;
   }
 
   async findAll(filterTicketAdminDto: FilterTicketAdminDto): Promise<Ticket[]> {

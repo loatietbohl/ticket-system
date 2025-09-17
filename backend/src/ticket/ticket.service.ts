@@ -8,6 +8,7 @@ import {
   FilterTicketDto,
   TicketUserResponseDto,
 } from './dto';
+import { EventsGateway } from '../events/events.gateway';
 
 @Injectable()
 export class TicketService {
@@ -16,6 +17,7 @@ export class TicketService {
     private ticketRepository: Repository<Ticket>,
     @InjectRepository(TicketHistory)
     private historyRepository: Repository<TicketHistory>,
+    private readonly eventsGateway: EventsGateway,
   ) {}
 
   async create(createTicketDto: CreateTicketDto): Promise<Ticket> {
@@ -39,7 +41,12 @@ export class TicketService {
     if (!(await this.findOne(ticketId))) {
       throw new NotFoundException();
     }
-    return this.addMessageUnsafe(ticketId, createMessageDto);
+    const ticketHistory = await this.addMessageUnsafe(
+      ticketId,
+      createMessageDto,
+    );
+    this.eventsGateway.emitTicketMessage(ticketHistory);
+    return ticketHistory;
   }
 
   private async addMessageUnsafe(

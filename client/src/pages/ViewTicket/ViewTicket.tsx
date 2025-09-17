@@ -6,9 +6,11 @@ import type { TicketHistoryResponse } from "./types";
 import { TicketHistory } from "./TicketHistory";
 import { Button, Typography } from "@material-ui/core";
 import axios from "axios";
+import { useWebsocket } from "./useWebsocket";
 
 export const ViewTicket = () => {
   const { id } = useParams<{ id: string }>();
+  useWebsocket(id);
 
   const { data, isLoading } = useQuery<TicketHistoryResponse>(
     ["ticket", id],

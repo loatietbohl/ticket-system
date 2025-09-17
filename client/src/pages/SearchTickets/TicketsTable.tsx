@@ -33,7 +33,7 @@ export const TicketsTable: FC<Props> = ({ data }) => {
             {data.map((row) => (
               <TableRow
                 key={row.id}
-                onClick={() => history.push(`/ticket/${row.id}`)}
+                onClick={() => history.push(`/tickets/${row.id}`)}
                 style={{ cursor: "pointer" }}
               >
                 <TableCell

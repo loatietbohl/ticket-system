@@ -3,10 +3,13 @@ import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TicketService } from '../ticket.service';
 import {
+  TicketHistory,
   TicketHistoryResponse,
   TicketPriority,
   TicketStatus,
 } from '../ticket.types';
+import { SocketService } from 'src/app/socket.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-ticket-history',
@@ -14,6 +17,8 @@ import {
   styleUrls: ['./ticket-history.component.scss'],
 })
 export class TicketHistoryComponent implements OnInit {
+  private subscription: Subscription | null = null;
+
   ticket?: TicketHistoryResponse;
   loading = true;
 
@@ -24,6 +29,7 @@ export class TicketHistoryComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private socketService: SocketService,
     private ticketService: TicketService,
     private fb: FormBuilder
   ) {
@@ -46,6 +52,24 @@ export class TicketHistoryComponent implements OnInit {
         priority: ticket?.priority || null,
       });
     });
+
+    this.subscription = this.socketService
+      .onEvent<TicketHistory>('ticketMessage')
+      .subscribe((response) => {
+        if (!this.ticket) {
+          return;
+        }
+
+        this.ticket.history = [
+          ...this.ticket.history,
+          {
+            id: response.id,
+            email: response.email,
+            message: response.message,
+            createdAt: response.createdAt,
+          },
+        ];
+      });
   }
 
   submit() {
@@ -65,20 +89,8 @@ export class TicketHistoryComponent implements OnInit {
     };
 
     this.ticketService.updateTicket(this.ticket.id, payload).subscribe({
-      next: (updated) => {
+      next: () => {
         this.submitting = false;
-
-        if (this.ticket) {
-          this.ticket.history = [
-            ...this.ticket.history,
-            {
-              id: updated.id,
-              email: updated.email,
-              message: updated.message,
-              createdAt: updated.createdAt,
-            },
-          ];
-        }
 
         this.form.get('message')?.reset('');
         this.form.get('message')?.setErrors(null);

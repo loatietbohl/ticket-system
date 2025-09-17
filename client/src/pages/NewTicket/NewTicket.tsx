@@ -47,7 +47,7 @@ export const NewTicket = () => {
                 </Button>
               </Grid>
               <Grid item>
-                <Link to={`/ticket/${data.id}`}>
+                <Link to={`/tickets/${data.id}`}>
                   <Button variant="contained">View ticket</Button>
                 </Link>
               </Grid>

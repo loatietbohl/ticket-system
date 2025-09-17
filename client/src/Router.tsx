@@ -8,7 +8,7 @@ export const Router = () => (
     <Switch>
       <Route exact path="/" component={NewTicket} />
       <Route exact path="/search" component={SearchTickets} />
-      <Route exact path="/ticket/:id" component={ViewTicket} />
+      <Route exact path="/tickets/:id" component={ViewTicket} />
     </Switch>
   </BrowserRouter>
 );

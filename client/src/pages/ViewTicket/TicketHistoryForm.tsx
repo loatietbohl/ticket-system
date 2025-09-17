@@ -1,19 +1,9 @@
 import { useForm } from "react-hook-form";
 import { Button, Grid, InputAdornment, TextField } from "@material-ui/core";
 import axios from "axios";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 import { useEffect, type FC } from "react";
-import type { TicketHistoryResponse } from "./types";
-
-type TicketMessageResponse = {
-  id: number;
-  email: string;
-  message: string;
-  createdAt: string;
-  ticket: {
-    id: number;
-  };
-};
+import type { TicketMessageResponse } from "./types";
 
 type FormData = {
   message: string;
@@ -44,29 +34,6 @@ export const TicketHistoryForm: FC<Props> = ({ messagePayload }) => {
     reset,
   } = useForm<FormData>();
 
-  const queryClient = useQueryClient();
-
-  const instantUpdateHistory = ({
-    id,
-    email,
-    message,
-    createdAt,
-  }: TicketMessageResponse) => {
-    queryClient.setQueryData<TicketHistoryResponse | undefined>(
-      ["ticket", messagePayload.id.toString()],
-      (oldData) => {
-        if (!oldData) {
-          return undefined;
-        }
-        return {
-          ...oldData,
-          history: [...oldData.history, { id, email, message, createdAt }],
-        };
-      }
-    );
-    reset();
-  };
-
   const { mutate, isLoading, data } = useMutation({
     mutationFn: async (formData: FormData) => {
       const res = await axios.post<TicketMessageResponse>(
@@ -78,7 +45,9 @@ export const TicketHistoryForm: FC<Props> = ({ messagePayload }) => {
       );
       return res.data;
     },
-    onSuccess: instantUpdateHistory,
+    onSuccess: () => {
+      reset();
+    },
   });
 
   useEffect(() => {

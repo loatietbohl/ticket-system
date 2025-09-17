@@ -33,6 +33,12 @@ This gives context for the change and helps track the ticket's change history (n
 
 ## Next steps
 
+Business
+
+- Block user interactions with closed tickets
+
+Technical
+
 - Use `.env`.
 - Add logs to nestjs.
 - Add pagination to `/tickets`.
@@ -41,6 +47,7 @@ This gives context for the change and helps track the ticket's change history (n
 - Add dark mode to admin app.
 - Invalidate jwt.
 - Use the backend to filter, instead of the UI.
+- Handle UI errors on failed requests.
 - Remove duplication of ticket priority and status strings.
 - Reuse DTOs fields, removing duplication.
 - `adminService.findAll()` is elegant, but hard to scale.
