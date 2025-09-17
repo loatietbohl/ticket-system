@@ -4,7 +4,9 @@
 
 ### Docker
 
-`sudo docker-compose up`
+```
+sudo docker-compose up
+```
 
 ### Manual
 
@@ -57,6 +59,13 @@ Follows a chat approach, thread linked by email.
 Admins must provide a message when changing a ticket's status or priority.
 <br>
 This gives context for the change and helps track the ticket's change history (not implemented).
+
+\*Hardcoded user:
+
+```
+email: admin@admin.com
+password: hireme
+```
 
 - Uses `angular-Material` and `flex-layout` to simplify html/css.
 - Uses `guards` to protect routes.
