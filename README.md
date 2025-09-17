@@ -5,6 +5,7 @@
 ## Backend
 
 Only admins can see and change the priority of a ticket.
+<br>
 e.g. an user wouldn't be happy to see that their ticket has low priority.
 
 - Clean separation of concerns with modules: `Auth`, `Admin`, `Ticket`, `User`.
@@ -14,7 +15,7 @@ e.g. an user wouldn't be happy to see that their ticket has low priority.
 
 ## Client
 
-Follows a chat approach, thread linked by email
+Follows a chat approach, thread linked by email.
 
 - Uses `vite` for fast compiling time.
 - Uses `react-query` to simplify requests and cache.
@@ -24,6 +25,7 @@ Follows a chat approach, thread linked by email
 ## Admin
 
 Admins must provide a message when changing a ticket's status or priority.
+<br>
 This gives context for the change and helps track the ticket's change history (not implemented).
 
 - Uses `angular-Material` and `flex-layout` to simplify html/css.
@@ -31,12 +33,13 @@ This gives context for the change and helps track the ticket's change history (n
 
 ## Next steps
 
-- Use .env
-- Add logs to nestjs
-- Add pagination to /tickets
-- Add transactions e.g. ticket creation
-- Add tests (shame...)
-- Add dark mode to admin app
-- Remove duplication of ticket priority and status strings
-- Reuse DTOs fields, removing duplication
-- admin.service findAll is elegant, but hard to scale
+- Use `.env`.
+- Add logs to nestjs.
+- Add pagination to `/tickets`.
+- Add transactions e.g. ticket creation.
+- Add tests (shame... ): ).
+- Add dark mode to admin app.
+- Use the backend to filter, instead of the UI.
+- Remove duplication of ticket priority and status strings.
+- Reuse DTOs fields, removing duplication.
+- `adminService.findAll()` is elegant, but hard to scale.
