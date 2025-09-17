@@ -75,6 +75,7 @@ password: hireme
 Business
 
 - Block user endpoints for closed tickets
+- Authenticate users
 
 Technical
 
