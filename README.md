@@ -2,6 +2,29 @@
 
 ## How to run
 
+### Docker
+
+`sudo docker-compose up`
+
+### Manual
+
+```
+cd client
+npm install
+npm run dev
+
+cd admin
+npm install
+nvm use 14
+npm run start
+
+cd backend
+npm install
+sudo docker-compose up // database
+npm run start:dev
+
+```
+
 ## Backend
 
 Only admins can see and change the priority of a ticket.
