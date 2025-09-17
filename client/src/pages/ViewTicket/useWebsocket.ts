@@ -1,10 +1,8 @@
 import { useQueryClient } from "react-query";
-import io from "socket.io-client";
 import { useEffect } from "react";
 import type { QueryClient } from "react-query";
 import type { TicketHistoryResponse, TicketMessageResponse } from "./types";
-
-const socket = io("http://localhost:3000");
+import { socket } from "../../socket";
 
 const updateTicketHistory = (
   queryClient: QueryClient,
@@ -44,7 +42,6 @@ export const useWebsocket = (ticketId: string) => {
 
     return () => {
       socket.off("ticketMessage");
-      socket.disconnect();
     };
-  }, [queryClient, ticketId]);
+  }, [ticketId, queryClient]);
 };
