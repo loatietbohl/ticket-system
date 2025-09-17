@@ -8,21 +8,28 @@
 
 ### Manual
 
+Client
+
 ```
-cd client
 npm install
 npm run dev
+```
 
-cd admin
+Admin
+
+```
 npm install
 nvm use 14
 npm run start
+```
 
-cd backend
+Backend
+
+```
 npm install
-sudo docker-compose up // database
+// database
+sudo docker-compose up
 npm run start:dev
-
 ```
 
 ## Backend
@@ -58,7 +65,7 @@ This gives context for the change and helps track the ticket's change history (n
 
 Business
 
-- Block user interactions with closed tickets
+- Block user endpoints for closed tickets
 
 Technical
 
@@ -74,3 +81,4 @@ Technical
 - Remove duplication of ticket priority and status strings.
 - Reuse DTOs fields, removing duplication.
 - `adminService.findAll()` is elegant, but hard to scale.
+- Websocket for new tickets.
