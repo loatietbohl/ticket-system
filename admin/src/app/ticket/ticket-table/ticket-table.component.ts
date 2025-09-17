@@ -15,7 +15,7 @@ type Filter = {
 })
 export class TicketTableComponent implements OnInit {
   dataSource = new MatTableDataSource<TicketsResponse>([]);
-  displayedColumns: string[] = ['title', 'status', 'priority'];
+  displayedColumns: string[] = ['id', 'title', 'status', 'priority'];
 
   status: (TicketStatus | 'All')[] = ['All', 'open', 'in_progress', 'closed'];
   priorities: (TicketPriority | 'All')[] = ['All', 'low', 'medium', 'high'];
