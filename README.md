@@ -39,6 +39,7 @@ This gives context for the change and helps track the ticket's change history (n
 - Add transactions e.g. ticket creation.
 - Add tests (shame... ): ).
 - Add dark mode to admin app.
+- Invalidate jwt.
 - Use the backend to filter, instead of the UI.
 - Remove duplication of ticket priority and status strings.
 - Reuse DTOs fields, removing duplication.
