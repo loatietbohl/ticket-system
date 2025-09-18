@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./ticket-history.component.scss'],
 })
 export class TicketHistoryComponent implements OnInit {
-  private subscription: Subscription | null = null;
+  subscription: Subscription | null = null;
 
   ticket?: TicketHistoryResponse;
   loading = true;
@@ -81,13 +81,13 @@ export class TicketHistoryComponent implements OnInit {
       return;
     }
 
-    this.submitting = true;
     const payload = {
       status: this.form.value.status,
       priority: this.form.value.priority,
       message: this.form.value.message,
     };
 
+    this.submitting = true;
     this.ticketService.updateTicket(this.ticket.id, payload).subscribe({
       next: () => {
         this.submitting = false;
@@ -95,7 +95,7 @@ export class TicketHistoryComponent implements OnInit {
         this.form.get('message')?.reset('');
         this.form.get('message')?.setErrors(null);
       },
-      error: (err) => {
+      error: () => {
         this.submitting = false;
       },
     });

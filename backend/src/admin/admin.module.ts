@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TicketModule } from 'src/ticket/ticket.module';
+import { TicketModule } from '../ticket/ticket.module';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 import { Ticket, TicketHistory } from '../ticket/entities';
-import { EventsModule } from 'src/events/events.module';
+import { EventsModule } from '../events/events.module';
 
 @Module({
   imports: [

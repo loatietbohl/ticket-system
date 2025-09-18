@@ -29,12 +29,13 @@ export const SearchTickets = () => {
     }
   );
 
+  const onSubmit = async (formData: FormData) => {
+    setFilters(formData);
+  };
+
   return (
     <Layout Buttons={[NavButtons.New]}>
-      <SearchTicketsForm
-        defaultValue={filters?.email}
-        setFilters={(s: FormData) => setFilters(s)}
-      />
+      <SearchTicketsForm defaultValue={filters?.email} onSubmit={onSubmit} />
       <Box style={{ marginTop: "25px" }}>
         <Grid container justifyContent="center">
           {isLoading ? (

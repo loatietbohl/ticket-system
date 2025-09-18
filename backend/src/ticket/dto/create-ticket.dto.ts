@@ -1,12 +1,4 @@
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  IsEnum,
-  IsOptional,
-  MaxLength,
-} from 'class-validator';
-import { TicketPriority, TicketStatus } from '../entities/ticket.entity';
+import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class CreateTicketDto {
   @IsNotEmpty()
@@ -21,12 +13,4 @@ export class CreateTicketDto {
   @IsNotEmpty()
   @IsString()
   message: string;
-
-  @IsOptional()
-  @IsEnum(TicketStatus)
-  status?: TicketStatus;
-
-  @IsOptional()
-  @IsEnum(TicketPriority)
-  priority?: TicketPriority;
 }

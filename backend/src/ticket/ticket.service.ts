@@ -16,22 +16,17 @@ export class TicketService {
     @InjectRepository(Ticket)
     private ticketRepository: Repository<Ticket>,
     @InjectRepository(TicketHistory)
-    private historyRepository: Repository<TicketHistory>,
+    private ticketHistoryRepository: Repository<TicketHistory>,
     private readonly eventsGateway: EventsGateway,
   ) {}
 
   async create(createTicketDto: CreateTicketDto): Promise<Ticket> {
-    const { title, email, message, status, priority } = createTicketDto;
-    const ticket = this.ticketRepository.create({
+    const { title, email, message } = createTicketDto;
+    return this.ticketRepository.save({
       title,
       email,
-      status,
-      priority,
+      history: [{ email, message }],
     });
-    const savedTicket = await this.ticketRepository.save(ticket);
-    void this.addMessageUnsafe(savedTicket.id, { email, message });
-
-    return savedTicket;
   }
 
   async addMessage(
@@ -41,23 +36,15 @@ export class TicketService {
     if (!(await this.findOne(ticketId))) {
       throw new NotFoundException();
     }
-    const ticketHistory = await this.addMessageUnsafe(
-      ticketId,
-      createMessageDto,
-    );
-    this.eventsGateway.emitTicketMessage(ticketHistory);
-    return ticketHistory;
-  }
 
-  private async addMessageUnsafe(
-    ticketId: number,
-    createMessageDto: CreateTicketMessageDto,
-  ) {
-    const ticketHistory = this.historyRepository.create({
+    const ticketHistory = await this.ticketHistoryRepository.save({
       ...createMessageDto,
       ticket: { id: ticketId },
     });
-    return await this.historyRepository.save(ticketHistory);
+
+    this.eventsGateway.emitTicketMessage(ticketHistory);
+
+    return ticketHistory;
   }
 
   async findAll(
@@ -82,7 +69,7 @@ export class TicketService {
     return ticketHistory;
   }
 
-  async findOne(ticketId: number) {
+  async findOne(ticketId: number): Promise<Ticket | undefined> {
     return await this.ticketRepository.findOne(ticketId);
   }
 }

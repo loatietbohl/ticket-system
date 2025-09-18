@@ -25,7 +25,7 @@ export class AdminController {
     @Request() req: Request & { user: JwtPayload },
     @Param('id', ParseIntPipe) ticketId: number,
     @Body() updateTicketAdminDto: UpdateTicketAdminDto,
-  ): Promise<TicketHistory | undefined> {
+  ): Promise<TicketHistory> {
     return await this.adminService.updateTicket(
       req.user.email,
       ticketId,

@@ -25,18 +25,15 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
-    if (!this.loginForm.valid) {
+    if (this.loginForm.invalid) {
       return;
     }
 
     this.loading = true;
-    this.error = '';
 
     const { email, password } = this.loginForm.value;
-
     this.authService.login(email, password).subscribe({
       next: () => {
-        this.loading = false;
         this.router.navigate(['/tickets']);
       },
       error: () => {

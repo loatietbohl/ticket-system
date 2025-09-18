@@ -4,7 +4,6 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   ManyToOne,
-  JoinColumn,
 } from 'typeorm';
 import { Ticket } from './ticket.entity';
 
@@ -16,7 +15,6 @@ export class TicketHistory {
   @ManyToOne(() => Ticket, (ticket) => ticket.history, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn()
   ticket: Ticket;
 
   @Column()

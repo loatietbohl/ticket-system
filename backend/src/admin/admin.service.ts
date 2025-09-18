@@ -18,30 +18,31 @@ export class AdminService {
   ) {}
 
   async updateTicket(
-    userEmail: string,
+    email: string,
     ticketId: number,
     updateTicketAdminDto: UpdateTicketAdminDto,
-  ): Promise<TicketHistory | undefined> {
+  ): Promise<TicketHistory> {
     if (!(await this.ticketService.findOne(ticketId))) {
       throw new NotFoundException();
     }
 
+    const { status, priority, message } = updateTicketAdminDto;
+
     await this.ticketRepository.save({
       id: ticketId,
-      status: updateTicketAdminDto.status,
-      priority: updateTicketAdminDto.priority,
+      status,
+      priority,
     });
-    const ticketHistory = this.ticketHistoryRepository.create({
-      message: updateTicketAdminDto.message,
-      email: userEmail,
+
+    const ticketHistory = await this.ticketHistoryRepository.save({
       ticket: { id: ticketId },
+      message: message,
+      email,
     });
-    const savedTicketHistory =
-      await this.ticketHistoryRepository.save(ticketHistory);
 
-    this.eventsGateway.emitTicketMessage(savedTicketHistory);
+    this.eventsGateway.emitTicketMessage(ticketHistory);
 
-    return savedTicketHistory;
+    return ticketHistory;
   }
 
   async findAll(filterTicketAdminDto: FilterTicketAdminDto): Promise<Ticket[]> {
@@ -55,7 +56,7 @@ export class AdminService {
     });
   }
 
-  async findOneWithHistory(ticketId: number) {
+  async findOneWithHistory(ticketId: number): Promise<Ticket> {
     const ticketHistory = await this.ticketRepository.findOne(ticketId, {
       relations: ['history'],
     });

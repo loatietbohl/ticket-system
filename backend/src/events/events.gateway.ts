@@ -1,6 +1,6 @@
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { TicketHistory } from 'src/ticket/entities';
+import { TicketHistory } from '../ticket/entities';
 
 @WebSocketGateway({ cors: { origin: '*' } })
 export class EventsGateway {

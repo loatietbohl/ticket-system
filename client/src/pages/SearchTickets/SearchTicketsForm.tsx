@@ -12,19 +12,15 @@ import type { FormData } from "./types";
 
 type Props = {
   defaultValue?: string;
-  setFilters: (s: FormData) => void;
+  onSubmit: (s: FormData) => void;
 };
 
-export const SearchTicketsForm: FC<Props> = ({ setFilters, defaultValue }) => {
+export const SearchTicketsForm: FC<Props> = ({ defaultValue, onSubmit }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
-
-  const onSubmit = async (formData: FormData) => {
-    setFilters(formData);
-  };
 
   return (
     <>
